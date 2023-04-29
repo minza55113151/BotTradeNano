@@ -67,11 +67,11 @@ def rebalance(client,
     if target_value_symbol1 < value_symbol1 and not is_buy:
         new_balance_symbol1 -= dif_quantity
         new_balance_symbol2 += dif_value
-        # client.create_order(symbol=symbol,side="SELL",type="MARKET",quantity=dif_quantity)
+        client.create_order(symbol=symbol,side="SELL",type="MARKET",quantity=dif_quantity)
     elif target_value_symbol1 > value_symbol1 and is_buy:
         new_balance_symbol1 += dif_quantity
         new_balance_symbol2 -= dif_value
-        # client.create_order(symbol=symbol,side="BUY",type="MARKET",quantity=dif_quantity)
+        client.create_order(symbol=symbol,side="BUY",type="MARKET",quantity=dif_quantity)
     else:
         print("Do nothing")
         return False
