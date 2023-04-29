@@ -31,13 +31,15 @@ def webhook():
     print(data)
     
     buy_data = data["action"]
+    isBuy = buy_data == "BUY"
+    
     symbol = data["symbol"]
     amount_coin = float(data["amount_coin"])
     leverage = int(data["lev"])
     
     message = data
     print(message)
-    line_notify.send(message)
+    line_notify.send(str(message))
     
     for customer in customers:
         print(customer["id"])

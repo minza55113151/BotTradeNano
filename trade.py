@@ -35,10 +35,10 @@ def rebalance(client,
               percent = None,
               target_value_symbol1 = None,
               target_value_symbol2 = None):
-    if percent is None and target_value_symbol1 is None and target_value_symbol2 is None:
+    if percent == None and target_value_symbol1 == None and target_value_symbol2 == None:
         percent = 0.5
     
-    price_symbol1 = float(client.get_symbol_ticker(symbol=f"{symbol1}{symbol2}")["price"])
+    price_symbol1 = float(client.get_symbol_ticker(symbol=symbol)["price"])
     print(f"Price {symbol1}/{symbol2} = {price_symbol1} {symbol2}")
     
     balance_symbol1 = float(client.get_asset_balance(asset=symbol1)["free"])
@@ -70,12 +70,12 @@ def rebalance(client,
         balance_symbol1 -= dif_quantity
         balance_symbol2 += dif_value
         print(f"SELL {symbol1} {dif_quantity} [{dif_value} {symbol2}]")
-        #client.create_order(symbol=f"{symbol1}{symbol2}",side="SELL",type="MARKET",quantity=quantity)
+        #client.create_order(symbol=symbol,side="SELL",type="MARKET",quantity=quantity)
     elif target_value_symbol1 > value_symbol1 and is_buy:
         balance_symbol1 += dif_quantity
         balance_symbol2 -= dif_value
         print(f"BUY {symbol1} {dif_quantity} [{dif_value} {symbol2}]")
-        #client.create_order(symbol=f"{symbol1}{symbol2}",side="BUY",type="MARKET",quantity=quantity)
+        #client.create_order(symbol=symbol,side="BUY",type="MARKET",quantity=quantity)
     
     print(f"Balance {symbol1} = {balance_symbol1} {symbol1}\nBalance {symbol2} = {balance_symbol2} {symbol2}")
     value_symbol1 = balance_symbol1 * price_symbol1
