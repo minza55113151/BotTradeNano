@@ -1,0 +1,6 @@
+{
+  "action": "{{strategy.order.comment}}",
+  "synbol": "ETHUSDT",
+  "amount_coin": "{{strategy.order.contracts}}",
+  "lev": "20"
+}

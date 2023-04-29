@@ -31,10 +31,10 @@ def webhook():
     
     print(signal)
     
-    buy_signal = signal["ACTION"]
-    symbol = signal["SYMBOL"]
-    amount_coin = float(signal["AMOUNT_COIN"])
-    leverage = int(signal["LEV"])
+    buy_signal = signal["action"]
+    symbol = signal["symbol"]
+    amount_coin = float(signal["amount_coin"])
+    leverage = int(signal["lev"])
     
     message = f"buy_signal: {buy_signal}\nsymbol: {symbol}\namount_coin: {amount_coin}\nleverage: {leverage}"
     print(message)
