@@ -9,7 +9,6 @@ LINE_NOTIFY_TOKEN = "MiGiGvEehvIskk3qJrXLFeQ78Adpf9UvLO2wGLgA9JP"
 line_notify = LineNotify(LINE_NOTIFY_TOKEN)
 
 
-
 customers = [
     {
         "id": 0,
@@ -44,11 +43,13 @@ def webhook():
         success = rebalance(
             client,
             isBuy,
-            symbol1=symbol,
+            symbol=symbol,
+            symbol1=symbol_info[symbol]["baseAsset"],
+            symbol2=symbol_info[symbol]["quoteAsset"],
             percent=0.5
         )
         if success:
-            value = get_value_symbol(client, symbol, symbol_info[symbol]["quoteAsset"], symbol_info[symbol]["baseAsset"])
+            value = get_value_symbol(client, symbol, symbol_info[symbol]["baseAsset"], symbol_info[symbol]["quoteAsset"])
             message = f"Rebalance {symbol} {buy_data}\nValue: {value}"
             line_notify.send(message)
 
