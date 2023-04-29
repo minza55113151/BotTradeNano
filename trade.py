@@ -5,34 +5,40 @@ import dotenv
 
 # load env
 dotenv.load_dotenv()
-API_KEY = os.getenv('API_KEY')
-SECRET_KEY = os.getenv('SECRET_KEY')
+API_KEY = os.getenv("API_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # testnet
 API_KEY = "GRJaQlXdXyjHzKJv6uyfxIO1z7mTqq4QFzF0yFt4REJS1krN9lN2QipoDjfAg9lE"
 SECRET_KEY = "J6rVvqYmHcSnQ6feekOxetR7WnCVGbDSt7qwzjJoUyMuBE6gpmb6Gb6Q6E9gfj7v"
 
-# order = client.create_order(symbol=symbol,side='BUY',type='MARKET',quantity=qty)
-# order = client.create_order(symbol=symbol,side='SELL',type='MARKET',quantity=qty)
+# order = client.create_order(symbol=symbol,side="BUY",type="MARKET",quantity=qty)
+# order = client.create_order(symbol=symbol,side="SELL",type="MARKET",quantity=qty)
 
 # Diff at least 12 USDT that can be traded
 MIN_DIFF_VALUE = 12
-
+class MyCLient:    
+    def __init__(self, API_KEY, SECRET_KEY, testnet=False) -> None:
+        self.client = Client(API_KEY, SECRET_KEY, testnet=testnet)
+    def rebalance(self):
+        pass
+    
 def create_client(API_KEY, SECRET_KEY, testnet=False):
     client = Client(API_KEY, SECRET_KEY, testnet=testnet)
     return client
 
 def rebalance(client,
               is_buy,
-              symbol1 = 'BTC',
-              symbol2 = 'USDT',
+              symbol = "BTCUSDT",
+              symbol1 = "BTC",
+              symbol2 = "USDT",
               percent = None,
               target_value_symbol1 = None,
               target_value_symbol2 = None):
     if percent is None and target_value_symbol1 is None and target_value_symbol2 is None:
         percent = 0.5
     
-    price_symbol1 = float(client.get_symbol_ticker(symbol=f'{symbol1}{symbol2}')["price"])
+    price_symbol1 = float(client.get_symbol_ticker(symbol=f"{symbol1}{symbol2}")["price"])
     print(f"Price {symbol1}/{symbol2} = {price_symbol1} {symbol2}")
     
     balance_symbol1 = float(client.get_asset_balance(asset=symbol1)["free"])
@@ -64,12 +70,12 @@ def rebalance(client,
         balance_symbol1 -= dif_quantity
         balance_symbol2 += dif_value
         print(f"SELL {symbol1} {dif_quantity} [{dif_value} {symbol2}]")
-        #client.create_order(symbol=f'{symbol1}{symbol2}',side='SELL',type='MARKET',quantity=quantity)
+        #client.create_order(symbol=f"{symbol1}{symbol2}",side="SELL",type="MARKET",quantity=quantity)
     elif target_value_symbol1 > value_symbol1 and is_buy:
         balance_symbol1 += dif_quantity
         balance_symbol2 -= dif_value
         print(f"BUY {symbol1} {dif_quantity} [{dif_value} {symbol2}]")
-        #client.create_order(symbol=f'{symbol1}{symbol2}',side='BUY',type='MARKET',quantity=quantity)
+        #client.create_order(symbol=f"{symbol1}{symbol2}",side="BUY",type="MARKET",quantity=quantity)
     
     print(f"Balance {symbol1} = {balance_symbol1} {symbol1}\nBalance {symbol2} = {balance_symbol2} {symbol2}")
     value_symbol1 = balance_symbol1 * price_symbol1
@@ -80,8 +86,8 @@ def rebalance(client,
 def get_symbols_info(client):
     exchange_info = client.get_exchange_info()
     exchange_info2 = {}
-    for i in exchange_info['symbols']:
-        exchange_info2[i['symbol']] = {
+    for i in exchange_info["symbols"]:
+        exchange_info2[i["symbol"]] = {
             "baseAsset": i["baseAsset"],
             "quoteAsset": i["quoteAsset"],
         }

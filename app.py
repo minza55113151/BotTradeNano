@@ -26,17 +26,16 @@ def main():
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    signal = request.data.decode('utf-8')
-    signal = json.loads(signal)
+    data = json.loads(request.data.decode('utf-8'))
     
-    print(signal)
+    print(data)
     
-    buy_signal = signal["action"]
-    symbol = signal["symbol"]
-    amount_coin = float(signal["amount_coin"])
-    leverage = int(signal["lev"])
+    buy_data = data["action"]
+    symbol = data["symbol"]
+    amount_coin = float(data["amount_coin"])
+    leverage = int(data["lev"])
     
-    message = f"buy_signal: {buy_signal}\nsymbol: {symbol}\namount_coin: {amount_coin}\nleverage: {leverage}"
+    message = data
     print(message)
     line_notify.send(message)
     
@@ -45,9 +44,9 @@ def webhook():
         client = create_client(customer["binance"]["api_key"], customer["binance"]["secret_key"], testnet=True)
         # rebalance(
         #     client,
-        #     buy_signal,
-        #     symbol1=signal['SYMBOL'],
-        #     percent=float(signal['AMOUNT_COIN'])
+        #     buy_data,
+        #     symbol1=data['SYMBOL'],
+        #     percent=float(data['AMOUNT_COIN'])
         #     )
 
 
