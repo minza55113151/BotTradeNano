@@ -42,7 +42,7 @@ def webhook():
     
     for customer in customers:
         print(customer["id"])
-        client = create_client(customer["api_key"], customer["secret_key"], testnet=True)
+        client = create_client(customer["binance"]["api_key"], customer["binance"]["secret_key"], testnet=True)
         # rebalance(
         #     client,
         #     buy_signal,
