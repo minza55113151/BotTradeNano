@@ -116,5 +116,6 @@ def get_value_symbol(client, symbol="BTCUSDT", symbol1="BTC", symbol2="USDT"):
 
 if __name__ == "__main__":
     client = create_client(API_KEY=API_KEY, SECRET_KEY=SECRET_KEY, testnet=True)
-    pprint(get_symbols_info(client))
+    # pprint(get_symbols_info(client))
     # rebalance(client, False, percent=0.5)
+    pprint(client.get_account())

@@ -2,6 +2,7 @@ from flask import Flask, request
 import json
 from trade import create_client, rebalance, get_value_symbol, get_symbols_info
 from line_notify import LineNotify
+from pprint import pprint
 
 app = Flask(__name__)
 
@@ -37,6 +38,11 @@ def webhook():
     buy_data = data["action"]
     isBuy = buy_data == "BUY"
     symbol = data["symbol"]
+    
+    print("------------------")
+    print(f"Rebalance {symbol} {buy_data}")
+    pprint(data)
+    print("------------------")
     
     for customer in customers:
         client = create_client(customer["binance"]["api_key"], customer["binance"]["secret_key"], testnet=customer["binance"]["testnet"])
