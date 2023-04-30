@@ -27,7 +27,7 @@ def create_client(API_KEY, SECRET_KEY, testnet=False):
     client = Client(API_KEY, SECRET_KEY, testnet=testnet)
     return client
 
-def rebalance(client,
+def rebalance(client: Client,
               is_buy,
               symbol = "BTCUSDT",
               symbol1 = "BTC",
@@ -67,10 +67,12 @@ def rebalance(client,
     if target_value_symbol1 < value_symbol1 and not is_buy:
         new_balance_symbol1 -= dif_quantity
         new_balance_symbol2 += dif_value
+        print(f"SELL {symbol1} {dif_quantity} [{dif_value} {symbol2}]")
         client.create_order(symbol=symbol,side="SELL",type="MARKET",quantity=dif_quantity)
     elif target_value_symbol1 > value_symbol1 and is_buy:
         new_balance_symbol1 += dif_quantity
         new_balance_symbol2 -= dif_value
+        print(f"BUY {symbol1} {dif_quantity} [{dif_value} {symbol2}]")
         client.create_order(symbol=symbol,side="BUY",type="MARKET",quantity=dif_quantity)
     else:
         print("Do nothing")
