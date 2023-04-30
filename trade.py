@@ -53,7 +53,7 @@ def rebalance(client: Client,
         if target_value_symbol1 is None and target_value_symbol2 is not None:
             target_value_symbol1 = value_sum - target_value_symbol2
     
-    dif_quantity = abs(target_value_symbol1-value_symbol1)/(price_symbol1)
+    dif_quantity = round(abs(target_value_symbol1-value_symbol1)/(price_symbol1), 6)
     dif_value = dif_quantity * price_symbol1
     
     if dif_value < MIN_DIFF_VALUE:
@@ -104,6 +104,7 @@ def get_symbols_info(client):
         exchange_info2[i["symbol"]] = {
             "baseAsset": i["baseAsset"],
             "quoteAsset": i["quoteAsset"],
+            "filters": i["filters"],
         }
     return exchange_info2
 
@@ -120,4 +121,7 @@ if __name__ == "__main__":
     client = create_client(API_KEY=API_KEY, SECRET_KEY=SECRET_KEY, testnet=True)
     # pprint(get_symbols_info(client))
     # rebalance(client, False, percent=0.5)
-    pprint(client.get_account())
+    # pprint(client.get_account())
+    # client.create_order(symbol="BTCUSDT",side="SELL",type="MARKET",quantity=0.001)
+    # client.create_order(symbol="BTCUSDT",side="BUY",type="MARKET",quantity=0.001)
+    
