@@ -17,9 +17,47 @@ SECRET_KEY = "J6rVvqYmHcSnQ6feekOxetR7WnCVGbDSt7qwzjJoUyMuBE6gpmb6Gb6Q6E9gfj7v"
 MIN_DIFF_VALUE = 12
 class MyCLient:
     def __init__(self, API_KEY, SECRET_KEY, testnet=False) -> None:
-        self.client = Client(API_KEY, SECRET_KEY, testnet=testnet)
+        self.API_KEY = API_KEY
+        self.SECRET_KEY = SECRET_KEY
+        self.testnet = testnet
+        
+        self.isCreateClient = False
+        
+    def create_client(self):
+        self.client = Client(self.API_KEY, self.SECRET_KEY, testnet=self.testnet)
+        self.isCreateClient = True
+        return self
+
+    def client_handler(self):
+        if not self.isCreateClient:
+            self.create_client()
+            
     def rebalance(self):
-        pass
+        self.client_handler()
+        
+    def get_symbols_info(self):
+        self.client_handler()
+        
+        exchange_info = self.client.get_exchange_info()
+        symbols_info = {}
+        for i in exchange_info["symbols"]:
+            symbols_info[i["symbol"]] = {
+                "baseAsset": i["baseAsset"],
+                "quoteAsset": i["quoteAsset"],
+                "filters": i["filters"],
+            }
+        return symbols_info
+       
+    def get_value_symbol(self, symbol="BTCUSDT", symbol1="BTC", symbol2="USDT"):
+        self.client_handler()
+        
+        price_symbol1 = float(self.client.get_symbol_ticker(symbol=symbol)["price"])
+        balance_symbol1 = float(self.client.get_asset_balance(asset=symbol1)["free"])
+        balance_symbol2 = float(self.client.get_asset_balance(asset=symbol2)["free"])
+        value_symbol1 = balance_symbol1 * price_symbol1
+        value_symbol2 = balance_symbol2
+        value_symbol = value_symbol1 + value_symbol2
+        return value_symbol
     
 def create_client(API_KEY, SECRET_KEY, testnet=False):
     client = Client(API_KEY, SECRET_KEY, testnet=testnet)
@@ -51,7 +89,7 @@ def rebalance(client: Client,
         if target_value_symbol1 is None and target_value_symbol2 is not None:
             target_value_symbol1 = value_sum - target_value_symbol2
     
-    step_size = get_symbols_info(client)[symbol]["filters"][2]["stepSize"]
+    step_size = get_symbols_info(client)[symbol]["filters"][1]["stepSize"]
     dif_quantity = abs(target_value_symbol1-value_symbol1)/(price_symbol1)
     dif_quantity = round_step_size(dif_quantity, step_size)
     dif_value = dif_quantity * price_symbol1
