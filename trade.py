@@ -1,4 +1,5 @@
 from binance import Client
+from binance.helpers import round_step_size
 from pprint import pprint
 import os
 import dotenv
@@ -11,9 +12,6 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # testnet
 API_KEY = "GRJaQlXdXyjHzKJv6uyfxIO1z7mTqq4QFzF0yFt4REJS1krN9lN2QipoDjfAg9lE"
 SECRET_KEY = "J6rVvqYmHcSnQ6feekOxetR7WnCVGbDSt7qwzjJoUyMuBE6gpmb6Gb6Q6E9gfj7v"
-
-# order = client.create_order(symbol=symbol,side="BUY",type="MARKET",quantity=qty)
-# order = client.create_order(symbol=symbol,side="SELL",type="MARKET",quantity=qty)
 
 # Diff at least 12 USDT that can be traded
 MIN_DIFF_VALUE = 12
@@ -53,7 +51,9 @@ def rebalance(client: Client,
         if target_value_symbol1 is None and target_value_symbol2 is not None:
             target_value_symbol1 = value_sum - target_value_symbol2
     
-    dif_quantity = round(abs(target_value_symbol1-value_symbol1)/(price_symbol1), 6)
+    step_size = get_symbols_info(client)[symbol]["filters"][2]["stepSize"]
+    dif_quantity = abs(target_value_symbol1-value_symbol1)/(price_symbol1)
+    dif_quantity = round_step_size(dif_quantity, step_size)
     dif_value = dif_quantity * price_symbol1
     
     if dif_value < MIN_DIFF_VALUE:
@@ -119,9 +119,9 @@ def get_value_symbol(client, symbol="BTCUSDT", symbol1="BTC", symbol2="USDT"):
 
 if __name__ == "__main__":
     client = create_client(API_KEY=API_KEY, SECRET_KEY=SECRET_KEY, testnet=True)
-    # pprint(get_symbols_info(client))
     # rebalance(client, False, percent=0.5)
     # pprint(client.get_account())
-    # client.create_order(symbol="BTCUSDT",side="SELL",type="MARKET",quantity=0.001)
-    # client.create_order(symbol="BTCUSDT",side="BUY",type="MARKET",quantity=0.001)
+    
+    # client.create_order(symbol="BTCUSDT",side="SELL",type="MARKET",quantity="0.001")
+    # client.create_order(symbol="BTCUSDT",side="BUY",type="MARKET",quantity="0.001")
     
