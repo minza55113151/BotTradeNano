@@ -19,7 +19,7 @@ line_notify = LineNotify(LINE_NOTIFY_TOKEN)
 API_KEY = os.getenv("API_KEY")
 API_SECRET = os.getenv("API_SECRET")
 HOSTCLIENT = MyCLient(API_KEY, API_SECRET).create_client()
-symbol_info = HOSTCLIENT.get_symbols_info(HOSTCLIENT)
+symbol_info = HOSTCLIENT.get_symbols_info()
 
 @app.route('/')
 def main():
@@ -48,7 +48,7 @@ def webhook():
             )
             if success:
                 price = client.client.get_symbol_ticker(symbol=symbol)["price"]
-                value = client.get_value_symbol(client, symbol, symbol_info[symbol]["baseAsset"], symbol_info[symbol]["quoteAsset"])
+                value = client.get_value_symbol(symbol, symbol_info[symbol]["baseAsset"], symbol_info[symbol]["quoteAsset"])
                 symbol2=symbol_info[symbol]["quoteAsset"]
                 message = f"\
                     Rebalance {symbol} {buy_data}\n\
