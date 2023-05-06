@@ -15,7 +15,6 @@ customers = list(db["customers"].find())
 
 LINE_NOTIFY_TOKEN = os.getenv("LINE_NOTIFY_TOKEN")
 line_notify = LineNotify(LINE_NOTIFY_TOKEN)
-line_notify.send("Server online")
 
 API_KEY = os.getenv("API_KEY")
 API_SECRET = os.getenv("API_SECRET")
