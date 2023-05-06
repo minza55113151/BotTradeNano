@@ -15,6 +15,7 @@ customers = list(db["customers"].find())
 
 LINE_NOTIFY_TOKEN = os.getenv("LINE_NOTIFY_TOKEN")
 line_notify = LineNotify(LINE_NOTIFY_TOKEN)
+line_notify.send("Server online")
 
 API_KEY = os.getenv("API_KEY")
 API_SECRET = os.getenv("API_SECRET")
@@ -49,12 +50,8 @@ def webhook():
             if success:
                 price = client.client.get_symbol_ticker(symbol=symbol)["price"]
                 value = client.get_value_symbol(symbol, symbol_info[symbol]["baseAsset"], symbol_info[symbol]["quoteAsset"])
-                symbol2=symbol_info[symbol]["quoteAsset"]
-                message = f"\
-                    Rebalance {symbol} {buy_data}\n\
-                    At {symbol} {price} {symbol2}\n\
-                    Current value: {value}\
-                "
+                symbol2 = symbol_info[symbol]["quoteAsset"]
+                message = f"Rebalance {symbol} {buy_data}\nAt {symbol} {price} {symbol2}\nCurrent value: {value}"
                 line_notify.send(message)
     except Exception as e:
         line_notify.send(e)
@@ -62,6 +59,6 @@ def webhook():
 
     return "Webhook is working!!!"
 
+# This is for local
 if __name__ == '__main__':
-    line_notify.send("Server online")
     app.run(host="0.0.0.0", port=8000)
