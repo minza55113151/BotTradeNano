@@ -35,6 +35,8 @@ class MyCLient:
     ):
         self.client_handler()
         
+        symbol_info = self.get_symbols_info()
+        
         symbol1 = symbol_info[symbol]["baseAsset"]
         symbol2 = symbol_info[symbol]["quoteAsset"]
                 
@@ -90,6 +92,8 @@ class MyCLient:
               symbol_info: dict = None
     ):
         self.client_handler()
+        
+        symbol_info = self.get_symbols_info()
         
         symbol1 = symbol_info[symbol]["baseAsset"]
         symbol2 = symbol_info[symbol]["quoteAsset"]

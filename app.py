@@ -61,7 +61,8 @@ def webhook():
                 if success:
                     price = client.client.get_symbol_ticker(symbol=symbol)["price"]
                     value = client.get_value_symbol(symbol)
-                    symbol2 = symbol_info[symbol]["quoteAsset"]
+                    
+                    symbol2 = client.get_symbols_info()[symbol]["quoteAsset"]
                     message = f"RB {symbol} {buy_data}\n{symbol} {price:.2f} {symbol2}\nCurrent value: {value:.2f} {symbol2}"
                     line_notify.send(message)
             
