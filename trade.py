@@ -23,6 +23,7 @@ class MyCLient:
     def client_handler(self):
         if self.client is None:
             self.create_client()
+        self.setup_class()
     
     def rebalance2(self,
               is_buy: bool,

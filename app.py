@@ -71,7 +71,7 @@ def webhook():
         line_notify.send(e)
         return "Error"
 
-    return 200
+    return "OK"
 
 
 # This is for local
