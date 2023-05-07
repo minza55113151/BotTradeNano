@@ -6,6 +6,7 @@ from pprint import pprint
 import os
 from dotenv import load_dotenv
 from database import db
+import traceback
 
 load_dotenv()
 
@@ -64,11 +65,15 @@ def webhook():
                     message = f"RB {symbol} {buy_data}\n{symbol} {price:.2f} {symbol2}\nCurrent value: {value:.2f} {symbol2}"
                     line_notify.send(message)
             
-            except Exception as e:
-                line_notify.send(e)
+            except:
+                error_message = traceback.format_exc()
+                print(error_message)
+                line_notify.send(error_message)
                 
-    except Exception as e:
-        line_notify.send(e)
+    except:
+        error_message = traceback.format_exc()
+        print(error_message)
+        line_notify.send(error_message)
         return "Error"
 
     return "OK"
