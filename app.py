@@ -13,8 +13,6 @@ load_dotenv()
 
 app = Flask(__name__)
 
-customers = list(db["customers"].find())
-
 LINE_NOTIFY_TOKEN = os.getenv("LINE_NOTIFY_TOKEN")
 line_notify = LineNotify(LINE_NOTIFY_TOKEN)
 
@@ -23,6 +21,15 @@ API_SECRET = os.getenv("API_SECRET")
 HOSTCLIENT = MyCLient(API_KEY, API_SECRET)
 HOSTCLIENT.setup_class()
 symbol_info = HOSTCLIENT.symbol_info
+
+customers = list(db["customers"].find())
+
+# # prepare customers clients
+# for customer in customers:
+#     api_key = customer["binance"]["api_key"]
+#     secret_key = customer["binance"]["secret_key"]
+#     testnet = customer["binance"]["testnet"]
+#     customer["client"] = MyCLient(api_key, secret_key, testnet=testnet).create_client()
 
 
 @app.route('/')
