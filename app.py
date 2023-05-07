@@ -31,10 +31,9 @@ customers = list(db["customers"].find())
 #     testnet = customer["binance"]["testnet"]
 #     customer["client"] = MyCLient(api_key, secret_key, testnet=testnet).create_client()
 
-
 @app.route('/')
 def main():
-    return "Working!!!"
+    return "Hello World"
 
 
 @app.route('/webhook', methods=['POST'])
@@ -52,6 +51,7 @@ def webhook():
                     continue
                 
                 client = MyCLient(customer["binance"]["api_key"], customer["binance"]["secret_key"], testnet=customer["binance"]["testnet"])
+                # client = customer["client"]
                 success = client.rebalance(
                     isBuy,
                     symbol=symbol,
@@ -71,7 +71,7 @@ def webhook():
         line_notify.send(e)
         return "Error"
 
-    return "Webhook is working!!!"
+    return 200
 
 
 # This is for local
