@@ -9,13 +9,14 @@ from database import db
 
 load_dotenv()
 
+#__name__ -> app
+
 app = Flask(__name__)
 
 customers = list(db["customers"].find())
 
 LINE_NOTIFY_TOKEN = os.getenv("LINE_NOTIFY_TOKEN")
 line_notify = LineNotify(LINE_NOTIFY_TOKEN)
-line_notify.send(f"Bot is working!!!\n{__name__}")
 
 API_KEY = os.getenv("API_KEY")
 API_SECRET = os.getenv("API_SECRET")
@@ -47,7 +48,7 @@ def webhook():
                 success = client.rebalance(
                     isBuy,
                     symbol=symbol,
-                    percent=0.5
+                    percent=0.6
                 )
                 if success:
                     price = client.client.get_symbol_ticker(symbol=symbol)["price"]
