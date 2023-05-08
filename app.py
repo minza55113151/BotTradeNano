@@ -59,7 +59,7 @@ def webhook():
                     percent=0.6
                 )
                 if success:
-                    price = client.client.get_symbol_ticker(symbol=symbol)["price"]
+                    price = float(client.client.get_symbol_ticker(symbol=symbol)["price"])
                     value = client.get_value_symbol(symbol)
                     
                     symbol2 = client.get_symbols_info()[symbol]["quoteAsset"]
