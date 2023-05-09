@@ -1,5 +1,6 @@
 from binance import Client
 from binance.helpers import round_step_size
+from database import DB
 
 # Diff at least 12 USDT that can be traded
 MIN_DIFF_VALUE = 12
@@ -70,13 +71,43 @@ class MyCLient:
             return False
         
         if target_value_symbol1 < value_symbol1 and not is_buy:
-            print(f"SELL {symbol1} {dif_quantity} [{dif_value} {symbol2}]")
             if not is_test:
                 self.client.create_order(symbol=symbol,side="SELL",type="MARKET",quantity=dif_quantity)
+                DB.log({
+                    "symbol": symbol,
+                    "side": "SELL",
+                    "type": "MARKET",
+                    "quantity": dif_quantity,
+                    "price": price_symbol1,
+                    "value": dif_value,
+                    "balance_symbol1": balance_symbol1,
+                    "balance_symbol2": balance_symbol2,
+                    "value_symbol1": value_symbol1,
+                    "value_symbol2": value_symbol2,
+                    "value_sum": value_sum,
+                    "percent": percent,
+                    "target_value_symbol1": target_value_symbol1,
+                    "target_value_symbol2": target_value_symbol2,
+                })
         elif target_value_symbol1 > value_symbol1 and is_buy:
-            print(f"BUY {symbol1} {dif_quantity} [{dif_value} {symbol2}]")
             if not is_test:
                 self.client.create_order(symbol=symbol,side="BUY",type="MARKET",quantity=dif_quantity)
+                DB.log({
+                    "symbol": symbol,
+                    "side": "BUY",
+                    "type": "MARKET",
+                    "quantity": dif_quantity,
+                    "price": price_symbol1,
+                    "value": dif_value,
+                    "balance_symbol1": balance_symbol1,
+                    "balance_symbol2": balance_symbol2,
+                    "value_symbol1": value_symbol1,
+                    "value_symbol2": value_symbol2,
+                    "value_sum": value_sum,
+                    "percent": percent,
+                    "target_value_symbol1": target_value_symbol1,
+                    "target_value_symbol2": target_value_symbol2,
+                })
         else:
             return False
         
@@ -142,12 +173,44 @@ class MyCLient:
             print(f"SELL {symbol1} {dif_quantity} [{dif_value} {symbol2}]")
             if not is_test:
                 self.client.create_order(symbol=symbol,side="SELL",type="MARKET",quantity=dif_quantity)
+                DB.log({
+                    "symbol": symbol,
+                    "side": "SELL",
+                    "type": "MARKET",
+                    "quantity": dif_quantity,
+                    "price": price_symbol1,
+                    "value": dif_value,
+                    "balance_symbol1": balance_symbol1,
+                    "balance_symbol2": balance_symbol2,
+                    "value_symbol1": value_symbol1,
+                    "value_symbol2": value_symbol2,
+                    "value_sum": value_sum,
+                    "percent": percent,
+                    "target_value_symbol1": target_value_symbol1,
+                    "target_value_symbol2": target_value_symbol2,
+                })
         elif target_value_symbol1 > value_symbol1 and is_buy:
             new_balance_symbol1 += dif_quantity
             new_balance_symbol2 -= dif_value
             print(f"BUY {symbol1} {dif_quantity} [{dif_value} {symbol2}]")
             if not is_test:
                 self.client.create_order(symbol=symbol,side="BUY",type="MARKET",quantity=dif_quantity)
+                DB.log({
+                    "symbol": symbol,
+                    "side": "BUY",
+                    "type": "MARKET",
+                    "quantity": dif_quantity,
+                    "price": price_symbol1,
+                    "value": dif_value,
+                    "balance_symbol1": balance_symbol1,
+                    "balance_symbol2": balance_symbol2,
+                    "value_symbol1": value_symbol1,
+                    "value_symbol2": value_symbol2,
+                    "value_sum": value_sum,
+                    "percent": percent,
+                    "target_value_symbol1": target_value_symbol1,
+                    "target_value_symbol2": target_value_symbol2,
+                })
         else:
             print("Do nothing")
             return False
@@ -202,4 +265,3 @@ class MyCLient:
 
 if __name__ == "__main__":
     pass
-    

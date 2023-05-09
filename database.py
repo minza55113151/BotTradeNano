@@ -12,3 +12,12 @@ try:
 except Exception as e:
     print(e)
     raise Exception("Cannot connect to MongoDB")
+
+class DB:
+    @staticmethod
+    def get_customers():
+        return list(db["customers"].find())
+
+    @staticmethod
+    def log(json_data: dict):
+        db["logs"].insert_one(json_data)

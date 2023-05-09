@@ -5,7 +5,7 @@ from line_notify import LineNotify
 from pprint import pprint
 import os
 from dotenv import load_dotenv
-from database import db
+from database import DB
 import traceback
 
 load_dotenv()
@@ -23,14 +23,16 @@ HOSTCLIENT = MyCLient(API_KEY, API_SECRET)
 HOSTCLIENT.setup_class()
 symbol_info = HOSTCLIENT.symbol_info
 
-customers = list(db["customers"].find())
+customers = DB.get_customers()
 
-# # prepare customers clients
-# for customer in customers:
-#     api_key = customer["binance"]["api_key"]
-#     secret_key = customer["binance"]["secret_key"]
-#     testnet = customer["binance"]["testnet"]
-#     customer["client"] = MyCLient(api_key, secret_key, testnet=testnet).create_client()
+# prepare customers clients
+for customer in customers:
+    api_key = customer["binance"]["api_key"]
+    secret_key = customer["binance"]["secret_key"]
+    testnet = customer["binance"]["testnet"]
+    customer["client"] = MyCLient(api_key, secret_key, testnet=testnet).create_client()
+
+# VPS
 
 @app.route('/')
 def main():
@@ -42,6 +44,8 @@ def webhook():
     try:
         data = json.loads(request.data.decode('utf-8'))
 
+        # bot_name = data["bot_name"]
+
         buy_data = data["action"]
         isBuy = buy_data == "BUY"
         symbol = data["symbol"]
@@ -51,8 +55,8 @@ def webhook():
                 if customer["is_bot_on"] == False:
                     continue
                 
-                client = MyCLient(customer["binance"]["api_key"], customer["binance"]["secret_key"], testnet=customer["binance"]["testnet"])
-                # client = customer["client"]
+                # client = MyCLient(customer["binance"]["api_key"], customer["binance"]["secret_key"], testnet=customer["binance"]["testnet"])
+                client = customer["client"]
                 success = client.rebalance(
                     isBuy,
                     symbol=symbol,
