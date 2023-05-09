@@ -46,7 +46,7 @@ def webhook():
     try:
         data = json.loads(request.data.decode('utf-8'))
 
-        # bot_name = data["bot_name"]
+        bot_name = data["bot_name"]
 
         buy_data = data["action"]
         isBuy = buy_data == "BUY"
@@ -54,7 +54,7 @@ def webhook():
         
         for customer in customers:
             try:
-                if customer["is_bot_on"] == False:
+                if not customer["is_bot_on"] or not customer["bot"][bot_name]:
                     continue
                 
                 # client = MyCLient(customer["binance"]["api_key"], customer["binance"]["secret_key"], testnet=customer["binance"]["testnet"])
