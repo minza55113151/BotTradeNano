@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
-load_dotenv()
+load_dotenv(os.getcwd())
 
 MONGO_CONNECTION_URL = os.getenv("MONGO_CONNECTION_URL")
 

@@ -1,6 +1,6 @@
 from binance import Client
 from binance.helpers import round_step_size
-from database import DB
+from database.database import DB
 
 # Diff at least 12 USDT that can be traded
 MIN_DIFF_VALUE = 12
@@ -25,6 +25,25 @@ class MyCLient:
         if self.client is None:
             self.create_client()
     
+    def rebalance(self,
+              is_buy: bool,
+              symbol: str = "BTCUSDT",
+              percent: float = None,
+              target_value_symbol1: float = None,
+              target_value_symbol2: float = None,
+              is_test: bool = False,
+              symbol_info: dict = None
+    ):
+        return self.rebalance2(
+            is_buy=is_buy,
+            symbol=symbol,
+            percent=percent,
+            target_value_symbol1=target_value_symbol1,
+            target_value_symbol2=target_value_symbol2,
+            is_test=is_test,
+            symbol_info=symbol_info
+        )
+    
     def rebalance2(self,
               is_buy: bool,
               symbol: str = "BTCUSDT",
@@ -40,7 +59,10 @@ class MyCLient:
         
         symbol1 = symbol_info[symbol]["baseAsset"]
         symbol2 = symbol_info[symbol]["quoteAsset"]
-                
+
+        min_qty = float(symbol_info[symbol]["filters"][1]["minQty"])
+        step_size = float(symbol_info[symbol]["filters"][1]["stepSize"])
+        
         price_symbol1 = float(self.client.get_symbol_ticker(symbol=symbol)["price"])
         balance_symbol1 = float(self.client.get_asset_balance(asset=symbol1)["free"])
         balance_symbol2 = float(self.client.get_asset_balance(asset=symbol2)["free"])
@@ -58,8 +80,6 @@ class MyCLient:
             if target_value_symbol1 is None and target_value_symbol2 is not None:
                 target_value_symbol1 = value_sum - target_value_symbol2
         
-        min_qty = float(symbol_info[symbol]["filters"][1]["minQty"])
-        step_size = float(symbol_info[symbol]["filters"][1]["stepSize"])
         dif_quantity = abs(target_value_symbol1-value_symbol1)/(price_symbol1)
         dif_quantity = round_step_size(dif_quantity, step_size)
         dif_value = dif_quantity * price_symbol1
@@ -113,7 +133,7 @@ class MyCLient:
         
         return True 
     
-    def rebalance(self,
+    def rebalance1(self,
               is_buy: bool,
               symbol: str = "BTCUSDT",
               percent: float = None,
@@ -131,7 +151,7 @@ class MyCLient:
         
         min_qty = float(symbol_info[symbol]["filters"][1]["minQty"])
         step_size = float(symbol_info[symbol]["filters"][1]["stepSize"])
-                
+        
         price_symbol1 = float(self.client.get_symbol_ticker(symbol=symbol)["price"])
         balance_symbol1 = float(self.client.get_asset_balance(asset=symbol1)["free"])
         balance_symbol2 = float(self.client.get_asset_balance(asset=symbol2)["free"])

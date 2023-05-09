@@ -5,7 +5,7 @@ from line_notify import LineNotify
 from pprint import pprint
 import os
 from dotenv import load_dotenv
-from database import DB
+from database.database import DB
 import traceback
 
 load_dotenv()
@@ -57,7 +57,6 @@ def webhook():
                 if not customer["is_bot_on"] or not customer["bot"][bot_name]:
                     continue
                 
-                # client = MyCLient(customer["binance"]["api_key"], customer["binance"]["secret_key"], testnet=customer["binance"]["testnet"])
                 client = customer["client"]
                 success = client.rebalance(
                     isBuy,
