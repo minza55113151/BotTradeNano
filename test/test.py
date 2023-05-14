@@ -2,13 +2,14 @@ import sys, os
 from dotenv import load_dotenv
 from pprint import pprint
 
-sys.path.append(os.getcwd())
-from trade import MyCLient
+print(os.getcwd())
+sys.path.append(os.path.join(os.getcwd()))
+
+from trade import MyClient
 
 load_dotenv()
 
 API_KEY = os.getenv("API_KEY")
 API_SECRET = os.getenv("API_SECRET")
-HOSTCLIENT = MyCLient(API_KEY, API_SECRET)
-HOSTCLIENT.setup_class()
-pprint(HOSTCLIENT.symbol_info)
+HOSTCLIENT = MyClient(API_KEY, API_SECRET).create_client()
+pprint(HOSTCLIENT.get_symbols_info())

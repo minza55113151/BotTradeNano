@@ -1,43 +1,36 @@
 from flask import Flask, request
 import json
-from trade import MyCLient
+from trade import MyClient
 from line_notify import LineNotify
 from pprint import pprint
 import os
 from dotenv import load_dotenv
 from database.database import DB
 import traceback
-
 load_dotenv()
 
-#__name__ -> app
-
-app = Flask(__name__)
 
 LINE_NOTIFY_TOKEN = os.getenv("LINE_NOTIFY_TOKEN")
-line_notify = LineNotify(LINE_NOTIFY_TOKEN)
-line_notify.send("Server online")
-
-API_KEY = os.getenv("API_KEY")
-API_SECRET = os.getenv("API_SECRET")
-HOSTCLIENT = MyCLient(API_KEY, API_SECRET)
-HOSTCLIENT.setup_class()
-symbol_info = HOSTCLIENT.symbol_info
+SERVER_LINE = LineNotify(LINE_NOTIFY_TOKEN)
 
 customers = DB.get_customers()
 
-# prepare customers clients
 for customer in customers:
-    api_key = customer["binance"]["api_key"]
-    secret_key = customer["binance"]["secret_key"]
-    testnet = customer["binance"]["testnet"]
-    customer["client"] = MyCLient(api_key, secret_key, testnet=testnet).create_client()
+    broker = customer["broker"]
+    api_key = customer[broker]["api_key"]
+    secret_key = customer[broker]["secret_key"]
+    testnet = customer[broker]["testnet"]
+    customer["client"] = MyClient(api_key, secret_key, testnet=testnet).create_client()
 
 # VPS
 
+
+app = Flask(__name__)
+
+
 @app.route('/')
 def main():
-    line_notify.send("Hello World")
+    SERVER_LINE.send("Hello World")
     return "Hello World"
 
 
@@ -54,32 +47,43 @@ def webhook():
         
         for customer in customers:
             try:
-                if not customer["is_bot_on"] or not customer["bot"][bot_name]:
-                    continue
+                is_bot_on = customer["is_bot_on"] and customer["bots"][bot_name]["is_on"]
+                if not is_bot_on: continue
                 
-                client = customer["client"]
+                customer_symbol = customer["bots"][bot_name]["symbol"]
+                if symbol != customer_symbol: continue
+                
+                client: MyClient = customer["client"]
                 success = client.rebalance(
+                    customer["_id"],
+                    bot_name,
                     isBuy,
-                    symbol=symbol,
-                    percent=0.6
+                    symbol,
+                    percent=customer["bots"][bot_name]["percent"],
+                    target_value_symbol1=customer["bots"][bot_name]["target_value_symbol1"],
+                    target_value_symbol2=customer["bots"][bot_name]["target_value_symbol2"],
                 )
-                if success:
+                
+                if not success: continue
+                
+                if customer["bots"][bot_name]["is_notify"] and customer["line"]["is_notify"]:
                     price = float(client.client.get_symbol_ticker(symbol=symbol)["price"])
                     value = client.get_value_symbol(symbol)
-                    
                     symbol2 = client.get_symbols_info()[symbol]["quoteAsset"]
-                    message = f"RB {symbol} {buy_data}\n{symbol} {price:.2f} {symbol2}\nCurrent value: {value:.2f} {symbol2}"
-                    line_notify.send(message)
-            
+                    customer_name = customer["info"]["name"]
+                    message = f"Name:{customer_name} BOT:{bot_name} {symbol} {buy_data}\n{symbol} {price:.2f} {symbol2}\nValue: {value:.2f} {symbol2}"
+                    
+                    SERVER_LINE.send(message)
+                
             except:
                 error_message = traceback.format_exc()
                 print(error_message)
-                line_notify.send(error_message)
+                SERVER_LINE.send(error_message)
                 
     except:
         error_message = traceback.format_exc()
         print(error_message)
-        line_notify.send(error_message)
+        SERVER_LINE.send(error_message)
         return "Error"
 
     return "OK"

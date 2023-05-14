@@ -1,9 +1,9 @@
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
+from datetime import datetime
 
-load_dotenv(os.getcwd())
-
+load_dotenv()
 MONGO_CONNECTION_URL = os.getenv("MONGO_CONNECTION_URL")
 
 try:
@@ -19,5 +19,10 @@ class DB:
         return list(db["customers"].find())
 
     @staticmethod
-    def log(json_data: dict):
-        db["logs"].insert_one(json_data)
+    def log_trade(json_data: dict):
+        json_data["timestamp"] = datetime.now().isoformat()
+        db["trade_logs"].insert_one(json_data)
+        
+
+if __name__ == "__main__":
+    pass
