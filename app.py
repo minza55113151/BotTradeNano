@@ -11,8 +11,6 @@ from datetime import datetime, timezone, timedelta
 load_dotenv()
 
 
-prev_day = datetime.now(tz=timezone(timedelta(hours=7))).day
-
 LINE_NOTIFY_TOKEN = os.getenv("LINE_NOTIFY_TOKEN")
 SERVER_LINE = LineNotify(LINE_NOTIFY_TOKEN)
 
@@ -33,16 +31,14 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    SERVER_LINE.send("Hello World")
     return "Hello World"
 
 
 @app.route("/keep-alive")
 def keep_alive():
-    day = datetime.now(tz=timezone(timedelta(hours=7))).day
-    if day != prev_day:
+    datetime_now = datetime.now(tz=timezone(timedelta(hours=7)))
+    if datetime_now.hour == 0 and datetime_now.minute <= 5:
         SERVER_LINE.send("Keep Alive")
-        prev_day = day
         
     return "OK"
 
