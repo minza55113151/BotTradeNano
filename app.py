@@ -7,8 +7,11 @@ import os
 from dotenv import load_dotenv
 from database.database import DB
 import traceback
+from datetime import datetime, timezone, timedelta
 load_dotenv()
 
+
+prev_day = datetime.now(tz=timezone(timedelta(hours=7))).day
 
 LINE_NOTIFY_TOKEN = os.getenv("LINE_NOTIFY_TOKEN")
 SERVER_LINE = LineNotify(LINE_NOTIFY_TOKEN)
@@ -28,16 +31,26 @@ for customer in customers:
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def main():
     SERVER_LINE.send("Hello World")
     return "Hello World"
 
 
-@app.route('/webhook', methods=['POST'])
+@app.route("/keep-alive")
+def keep_alive():
+    day = datetime.now(tz=timezone(timedelta(hours=7))).day
+    if day != prev_day:
+        SERVER_LINE.send("Keep Alive")
+        prev_day = day
+        
+    return "OK"
+
+
+@app.route("/webhook", methods=["POST"])
 def webhook():
     try:
-        data = json.loads(request.data.decode('utf-8'))
+        data = json.loads(request.data.decode("utf-8"))
 
         bot_name = data["bot_name"]
 
@@ -75,6 +88,10 @@ def webhook():
                     customer_name = customer["info"]["name"]
                     message = f"Name:{customer_name} BOT:{bot_name} {symbol} {buy_data}\n{symbol} {price:.2f} {symbol2}\nValue: {value:.2f} {symbol2}"
                     
+                    # line_token_key = customer["line"]["token_key"]
+                    # line_notify = LineNotify(line_token_key)
+                    # line_notify.send(message)
+                    
                     SERVER_LINE.send(message)
                 
             except:
@@ -92,5 +109,5 @@ def webhook():
 
 
 # This is for local
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
