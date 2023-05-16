@@ -22,7 +22,11 @@ class DB:
     def log_trade(json_data: dict):
         json_data["timestamp"] = datetime.now().isoformat()
         db["trade_logs"].insert_one(json_data)
-        
+    
+    @staticmethod
+    def log_alert(json_data: dict):
+        json_data["timestamp"] = datetime.now().isoformat()
+        db["alert_logs"].insert_one(json_data)
 
 if __name__ == "__main__":
     pass

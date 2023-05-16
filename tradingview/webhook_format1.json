@@ -1,6 +1,6 @@
 {
   "bot_name": "NANO",
-  "action": "{{strategy.order.comment}}",
+  "action": "BUY",
   "symbol": "ETHUSDT",
   "amount_coin": "{{strategy.order.contracts}}",
   "lev": "20",

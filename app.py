@@ -45,6 +45,8 @@ def webhook():
         isBuy = buy_data == "BUY"
         symbol = data["symbol"]
         
+        DB.log_alert(data)
+        
         for customer in customers:
             try:
                 is_bot_on = customer["is_bot_on"] and customer["bots"][bot_name]["is_on"]
