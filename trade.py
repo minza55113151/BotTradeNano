@@ -95,6 +95,9 @@ class MyClient:
         dif_quantity = round_step_size(dif_quantity, step_size)
         dif_value = dif_quantity * price_symbol1
         
+        min_notional = float(symbols_info[symbol]["filters"][6]["minNotional"])
+        max_notional = float(symbols_info[symbol]["filters"][6]["maxNotional"])
+        
         return {
             "symbol": symbol,
             "symbol1": symbol1,
@@ -112,6 +115,8 @@ class MyClient:
             "dif_value": dif_value,
             "min_qty": min_qty,
             "step_size": step_size,
+            "min_notional": min_notional,
+            "max_notional": max_notional,
         }
     #endregion
     
@@ -152,6 +157,8 @@ class MyClient:
         dif_value = data["dif_value"]
         min_qty = data["min_qty"]
         step_size = data["step_size"]
+        min_notional = data["min_notional"]
+        max_notional = data["max_notional"]
         
         new_balance_symbol1 = balance_symbol1
         new_balance_symbol2 = balance_symbol2
@@ -159,6 +166,11 @@ class MyClient:
         if dif_quantity < min_qty:
             if is_print:
                 print(f"Can't trade diff quantity = {dif_quantity} {symbol1} < {min_qty} {symbol1}")
+            return False
+        
+        if dif_value < min_notional or dif_value > max_notional:
+            if is_print:
+                print(f"Can't trade diff value = {dif_value} {symbol1} < {min_notional} {symbol1} or > {max_notional} {symbol1}")
             return False
         
         if target_value_symbol1 < value_symbol1 and not is_buy:
