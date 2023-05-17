@@ -78,7 +78,7 @@ def webhook():
                 if not success: continue
                 
                 if customer["bots"][bot_name]["is_notify"] and customer["line"]["is_notify"]:
-                    price = float(client.client.get_symbol_ticker(symbol=symbol)["price"])
+                    price = float(client._client.get_symbol_ticker(symbol=symbol)["price"])
                     value = client.get_value_symbol(symbol)
                     symbol2 = client.get_symbols_info()[symbol]["quoteAsset"]
                     customer_name = customer["info"]["name"]
