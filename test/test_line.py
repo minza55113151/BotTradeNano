@@ -1,5 +1,10 @@
 from line_notify import LineNotify
 
-LINE_NOTIFY_TOKEN = "MiGiGvEehvIskk3qJrXLFeQ78Adpf9UvLO2wGLgA9JP"
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+LINE_NOTIFY_TOKEN = os.getenv("LINE_NOTIFY_TOKEN")
+
 line_notify = LineNotify(LINE_NOTIFY_TOKEN)
 line_notify.send("Hello World")

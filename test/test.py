@@ -5,7 +5,8 @@ from pprint import pprint
 print(os.getcwd())
 sys.path.append(os.path.join(os.getcwd()))
 
-from trade import MyClient
+from library.trade.trade import MyClient
+
 
 load_dotenv()
 
