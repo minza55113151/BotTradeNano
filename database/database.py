@@ -21,7 +21,8 @@ class DB:
     @staticmethod
     def get_customers(refetch=False):
         if len(DB.customers) <= 0 or refetch:
-            DB.customers = list(db["customers"].find())
+            DB.customers.clear()
+            DB.customers += list(db["customers"].find())
         return DB.customers
 
     @staticmethod
