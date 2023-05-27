@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from datetime import datetime
+import certifi
 load_dotenv()
 
 
@@ -9,7 +10,7 @@ MONGO_CONNECTION_URL = os.getenv("MONGO_CONNECTION_URL")
 
 
 try:
-    client = MongoClient(MONGO_CONNECTION_URL)
+    client = MongoClient(MONGO_CONNECTION_URL, tlsCAFile=certifi.where())
     db = client['nanobot']
 except Exception as e:
     print(e)
