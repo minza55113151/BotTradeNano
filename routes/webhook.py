@@ -20,6 +20,7 @@ for customer in customers:
 
 webhook = Blueprint("webhook", __name__)
 
+
 @webhook.route("/", methods=["POST"])
 def main():
     try:
