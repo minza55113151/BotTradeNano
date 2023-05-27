@@ -19,8 +19,10 @@ except Exception as e:
 class DB:
     customers = []
     @staticmethod
-    def get_customers():
-        return list(db["customers"].find())
+    def get_customers(refetch=False):
+        if len(DB.customers) <= 0 or refetch:
+            DB.customers = list(db["customers"].find())
+        return DB.customers
 
     @staticmethod
     def log_trade(json_data: dict):
