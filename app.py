@@ -1,11 +1,10 @@
 from flask import Flask
+from waitress import serve
+from paste.translogger import TransLogger
 
 from routes.test import test
 from routes.keep_alive import keep_alive
 from routes.webhook import webhook
-
-
-# VPS
 
 
 app = Flask(__name__)
@@ -18,6 +17,7 @@ app.register_blueprint(webhook, url_prefix="/webhook")
 def main():
     return "Hello World"
 
-# This is for local
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+    serve(TransLogger(app, setup_console_handler=False), host="0.0.0.0", port=8000)
+    pass
