@@ -13,7 +13,10 @@ class Customers:
     customers = DB.get_customers()
     
     @staticmethod
-    def get_customers() -> list:
+    def get_customers(refetch=False) -> list:
+        if refetch:
+            Customers.customers = DB.get_customers(refetch=True)
+            Customers.is_create_client = False
         if not Customers.is_create_client:
             Customers.create_customer_client()
         return Customers.customers
@@ -52,7 +55,7 @@ class WebHook:
         return "OK"
     
     def execute_bot(self, bot_name, isBuy, symbol) -> None:
-        for customer in Customers.customers:
+        for customer in Customers.get_customers():
             try:
                 self.execute_bot_for_each_customer(customer, bot_name, isBuy, symbol)
             except:
