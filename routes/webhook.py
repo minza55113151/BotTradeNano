@@ -100,7 +100,7 @@ webhook = Blueprint("webhook", __name__)
 
 
 @webhook.route("/", methods=["POST"])
-def webhook():
+def main():
     data = json.loads(request.data.decode("utf-8"))
     return WebHook().on_data_received(data)
     # try:
