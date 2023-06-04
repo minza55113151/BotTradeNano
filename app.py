@@ -20,5 +20,5 @@ def main():
 
 if __name__ == "__main__":
     print("Starting server...")
-    serve(TransLogger(app, setup_console_handler=False), host="0.0.0.0", port=8000)
+    serve(TransLogger(app, setup_console_handler=False), host="0.0.0.0", port=80)
     pass
