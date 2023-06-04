@@ -1,0 +1,1 @@
+Change symbol == customer_symbol -> symbol in customer_symbol
