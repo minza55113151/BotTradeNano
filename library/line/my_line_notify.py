@@ -1,6 +1,7 @@
 from line_notify import LineNotify
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 
 class MyLineNotify:
     SERVER_TOKEN = ""
