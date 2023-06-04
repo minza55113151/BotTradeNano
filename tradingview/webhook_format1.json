@@ -1,9 +1,8 @@
 {
+  "password": "password",
   "bot_name": "NANO",
   "action": "BUY",
   "symbol": "ETHUSDT",
-  "amount_coin": "{{strategy.order.contracts}}",
-  "lev": "20",
   "ticker": "{{ticker}}",
   "exchange": "{{exchange}}",
   "time": "{{timenow}}",

@@ -38,6 +38,9 @@ class WebHook:
     
     def on_data_received(self, data) -> str:        
         try:
+            if data["password"] != "password":
+                return "Error"
+            
             bot_name = data["bot_name"]
             
             buy_data = data["action"]
