@@ -20,5 +20,6 @@ def main():
 
 if __name__ == "__main__":
     print("Starting server...")
+    print("http://119.59.114.241")
     serve(TransLogger(app, setup_console_handler=False), host="0.0.0.0", port=80)
     pass
