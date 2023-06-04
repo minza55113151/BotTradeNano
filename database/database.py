@@ -28,14 +28,17 @@ class DB:
 
     @staticmethod
     def log_trade(json_data: dict):
-        json_data["timestamp"] = datetime.utcnow().isoformat()
+        json_data["timestamp"] = DB.get_timestamp()
         db["trade_logs"].insert_one(json_data)
     
     @staticmethod
     def log_alert(json_data: dict):
-        json_data["timestamp"] = datetime.utcnow().isoformat()
+        json_data["timestamp"] = DB.get_timestamp()
         db["alert_logs"].insert_one(json_data)
 
+    @staticmethod
+    def get_timestamp():
+        return datetime.utcnow().isoformat()
 
 if __name__ == "__main__":
     pass
