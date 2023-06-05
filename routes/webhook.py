@@ -92,8 +92,8 @@ class WebHook:
             customer_name = customer["info"]["name"]
             message = f"Name:{customer_name} BOT:{bot_name} {symbol} {isBuy}\n{symbol} {price:.2f} {symbol2}\nValue: {value:.2f} {symbol2}"
             
-            line_token_key = customer["line"]["token_key"]
-            MyLineNotify.send(line_token_key, message)
+            line_token = customer["line"]["token"]
+            MyLineNotify.send(line_token, message)
 
     def error_handler(self) -> None:
         error_message = traceback.format_exc()
